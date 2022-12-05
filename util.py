@@ -22,17 +22,13 @@ class Grid():
         self.diagonal = True
         self.done = False
         Grid_cell.grid = self
-        self.grid = [[Grid_cell(i, j) for i in range(cols)] for j in range(rows)]
-        
-        for i in range(rows):
-            for j in range(cols):
-                self.grid[i][j].set_neighbors()
-        
+        self.matrix = [[Grid_cell(i, j) for i in range(cols)] for j in range(rows)]
+ 
     
     def draw(self):
         for i in range(self.rows):
             for j in range(self.cols):
-                cell = self.grid[i][j]
+                cell = self.matrix[i][j]
                 if cell.state == 0:
                     color = self.EMPTY
                 elif cell.state == 1:
@@ -51,13 +47,13 @@ class Grid():
                 
     
     def get_cell(self, x, y):
-        return self.grid[y][x]
+        return self.matrix[y][x]
 
     
     def get_cell_from_mouse(self, mouse_pos):
         row = int(mouse_pos[1] / self.h)
         col = int(mouse_pos[0] / self.w)
-        return self.grid[row][col]
+        return self.matrix[row][col]
     
     def run_algorithm(self, algorithm):
         if algorithm == "test" and self.done == False:
@@ -89,8 +85,8 @@ class Grid():
         neighbors = []
         for i in range(self.rows):
             for j in range(self.cols):
-                if self.grid[i][j].state == 1:
-                    for neighbor in self.grid[i][j].get_neighbors():
+                if self.matrix[i][j].state == 1:
+                    for neighbor in self.matrix[i][j].get_neighbors():
                         neighbors.append(neighbor)
         for neighbor in neighbors:
             neighbor.state = 1
@@ -189,17 +185,12 @@ class Grid():
         else:
             print("No path found")
 
-
-
-
-
-
     def print(self):
         for i in range(self.rows):
             if i != 0:
                 print("")
             for j in range(self.cols):
-                print(self.grid[i][j], end=" ")
+                print(self.matrix[i][j], end=" ")
     
 class Grid_cell():
     grid = None
@@ -208,7 +199,6 @@ class Grid_cell():
         self.y = y
         #states: 0 = empty, 1 = wall, 2 = start, 3 = end, 4 = path
         self.state = 0
-        self.neighbors = []
 
         self.f = 0
         self.g = 0
@@ -216,35 +206,20 @@ class Grid_cell():
         self.previous = None
 
 
-
-    def set_neighbors(self):
-
-        #add the neighbors in a clockwise direction starting from the top left
-        if self.x > 0 and self.y > 0 and self.grid.diagonal: #Up Left
-            self.neighbors.append(self.grid.get_cell(self.x-1, self.y-1))
-        if self.y > 0: #Up
-            self.neighbors.append(self.grid.get_cell(self.x, self.y-1))
-        if self.x < self.grid.cols-1 and self.y > 0 and self.grid.diagonal: #Up Right
-            self.neighbors.append(self.grid.get_cell(self.x+1, self.y-1))
-        if self.x < self.grid.cols-1: #Right
-            self.neighbors.append(self.grid.get_cell(self.x+1, self.y))
-        if self.x < self.grid.cols-1 and self.y < self.grid.rows-1 and self.grid.diagonal: #Down Right
-            self.neighbors.append(self.grid.get_cell(self.x+1, self.y+1))
-        if self.y < self.grid.rows-1: #Down
-            self.neighbors.append(self.grid.get_cell(self.x, self.y+1))
-        if self.x > 0 and self.y < self.grid.rows-1 and self.grid.diagonal: #Down Left
-            self.neighbors.append(self.grid.get_cell(self.x-1, self.y+1))
-        if self.x > 0: #Left
-            self.neighbors.append(self.grid.get_cell(self.x-1, self.y))
-
-
-
-        
-
-
         
     def get_neighbors(self):
-        return self.neighbors
+        neighbors = []
+        # Implement a get neighbors function, instead of storing the neighbors in a list
+        if self.x < self.grid.cols - 1: #right
+            neighbors.append(self.grid.matrix[self.y][self.x+1])
+        if self.x > 0: #left
+            neighbors.append(self.grid.matrix[self.y][self.x - 1])
+        if self.y < self.grid.rows - 1: #down
+            neighbors.append(self.grid.matrix[self.y + 1][self.x])
+        if self.y > 0: #up
+            neighbors.append(self.grid.matrix[self.y - 1][self.x])
+
+        return neighbors
 
 
     # def get_heuristic(self, neighbor, end):
