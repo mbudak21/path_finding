@@ -47,9 +47,13 @@ def main():
                     grid.get_cell_from_mouse(pos).state = current_state
 
 
+        grid.set_algorithm("A*")
+
+        #TODO: make the algorithm run in steps, not all at once
+
         # Run when space is pressed
         if pygame.key.get_pressed()[pygame.K_SPACE]:
-            grid.run_algorithm("A*")
+            grid.run_algorithm()
 
         screen.fill((30, 30, 30))
         grid.draw()

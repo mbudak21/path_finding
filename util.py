@@ -54,12 +54,15 @@ class Grid():
         row = int(mouse_pos[1] / self.h)
         col = int(mouse_pos[0] / self.w)
         return self.matrix[row][col]
+
+    def set_algorithm(self, algorithm):
+        self.algorithm = algorithm
     
-    def run_algorithm(self, algorithm):
-        if algorithm == "test" and self.done == False:
+    def run_algorithm(self):
+        if self.algorithm == "test" and self.done == False:
             self.test()
             self.done = True
-        elif algorithm == "A*" and self.done == False:
+        elif self.algorithm == "A*" and self.done == False:
             self.A_star()
             self.done = True
         else:
